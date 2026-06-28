@@ -31,7 +31,7 @@ void printkey(char *ptr){
 [0-9]+	{//just whole numbers
 	printf(" DIGIT(%s) ", yytext);
 }
-
+[ \t\n]+ {//Ignore whitespaces, tabs, nextlines}
 .	{// when no match is found! It is error
 	printf( "Unrecognized character: %s\n", yytext );
 }
