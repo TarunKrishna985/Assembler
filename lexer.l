@@ -1,9 +1,7 @@
 %{//------------declarations-----------------//
 #include <stdio.h>
-
-void printkey(char *ptr){
-	printf(" KEYWORD(%s) ", ptr);
-}
+#include <math.h>
+#include "parse.tab.h"
 %}
 %option noyywrap
 %%
@@ -13,31 +11,27 @@ void printkey(char *ptr){
 //keywords
 //1.data types
 %}
-"integer"	{printkey(yytext);}
-"float"		{printkey(yytext);}
-"char"		{printkey(yytext);}
-%{//2.control words 
-%}
-"if"		{printkey(yytext);}
-"else"		{printkey(yytext);}
-"while"		{printkey(yytext);}
-"for"		{printkey(yytext);}
-"while"		{printkey(yytext);}
-
-[A-Za-z_]([A-Za-z_]|[0-9])* 	{//identifier
+"load"		{yylval = 1;return LD;}
+"store"		{yylval = 2;return ST;}
+"add"		{yylval = 3;return AD;}
+"halt"		{yylval = 0;return HT;}
+%{/*
+[A-Za-z_]([A-Za-z_]|[0-9])*	{//identifier
 		printf(" IDENTIFIER(%s) ", yytext);
 		}
-		
-[0-9]+	{//just whole numbers
-	printf(" DIGIT(%s) ", yytext);
+*/
+%}		
+"["		{return '[';}
+"]"		{return ']';}
+[abcd]		{yylval = *yytext - 'a';return REG;}
+[0-9]+		{//just whole numbers
+		yylval = atoi(yytext);
+		return ADR;
 }
-[ \t\n]+ {//Ignore whitespaces, tabs, nextlines}
+
+[ \t\n]+ 	{//ignore whitespaces, tabs, nextlines
+}
 .	{// when no match is found! It is error
 	printf( "Unrecognized character: %s\n", yytext );
 }
 %%
-//---------auxiliary functions------------//
-int main(){
-	yylex();
-return 0;
-}
